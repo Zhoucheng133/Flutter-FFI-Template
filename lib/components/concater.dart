@@ -19,19 +19,31 @@ class _ConcaterState extends State<Concater> {
   TextEditingController str2=TextEditingController(text: " World");
 
   static String dylibHandler(List params){
-    final dynamicLib=DynamicLibrary.open(Platform.isMacOS ? 'libcore.dylib' : 'libcore.dll');
-    final Concat concat=dynamicLib
-      .lookup<NativeFunction<Concat>>('Concat')
-      .asFunction();
-    final a = (params[0] as String).toNativeUtf8();
-    final b = (params[1] as String).toNativeUtf8();
-    final resultPtr = concat(a, b);
-    final result = resultPtr.toDartString();
 
-    malloc.free(a);
-    malloc.free(b);
+    late DynamicLibrary dynamicLib;
+    late Concat concat;
 
-    return result;
+    try {
+      if(Platform.isIOS || Platform.isAndroid){
+        dynamicLib = DynamicLibrary.process();
+      }else if(Platform.isWindows || Platform.isMacOS){
+        dynamicLib = DynamicLibrary.open(Platform.isWindows ? "libcore.dll" : "libcore.dylib");
+      }
+
+      concat=dynamicLib.lookup<NativeFunction<Concat>>("Concat").asFunction();
+
+      final a = (params[0] as String).toNativeUtf8();
+      final b = (params[1] as String).toNativeUtf8();
+      final resultPtr = concat(a, b);
+      final result = resultPtr.toDartString();
+
+      malloc.free(a);
+      malloc.free(b);
+
+      return result;
+    } catch (e) {
+      return e.toString();
+    }
   }
 
   Future<void> handler(BuildContext context) async {

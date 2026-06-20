@@ -22,10 +22,17 @@ class _AdderState extends State<Adder> {
   TextEditingController num2=TextEditingController(text: "2");
 
   static int dylibHandler(List params){
-    final dynamicLib=DynamicLibrary.open(Platform.isMacOS ? 'libcore.dylib' : 'libcore.dll');
-    final AddDart add=dynamicLib
-      .lookup<NativeFunction<Add>>('Add')
-      .asFunction();
+    late DynamicLibrary dynamicLib;
+    late AddDart add;
+
+    if(Platform.isIOS || Platform.isAndroid){
+      dynamicLib = DynamicLibrary.process();
+    }else if(Platform.isWindows || Platform.isMacOS){
+      dynamicLib = DynamicLibrary.open(Platform.isWindows ? "libcore.dll" : "libcore.dylib");
+    }
+
+    add = dynamicLib.lookup<NativeFunction<Add>>("Add").asFunction();
+
     return add(params[0], params[1]);
   }
 
