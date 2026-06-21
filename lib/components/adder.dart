@@ -25,10 +25,12 @@ class _AdderState extends State<Adder> {
     late DynamicLibrary dynamicLib;
     late AddDart add;
 
-    if(Platform.isIOS || Platform.isAndroid){
+    if(Platform.isIOS){
       dynamicLib = DynamicLibrary.process();
     }else if(Platform.isWindows || Platform.isMacOS){
       dynamicLib = DynamicLibrary.open(Platform.isWindows ? "libcore.dll" : "libcore.dylib");
+    }else if(Platform.isAndroid){
+      dynamicLib = DynamicLibrary.open("libcore.so");
     }
 
     add = dynamicLib.lookup<NativeFunction<Add>>("Add").asFunction();

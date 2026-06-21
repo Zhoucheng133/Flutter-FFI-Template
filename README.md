@@ -69,3 +69,8 @@
    $(PROJECT_DIR)/libcore.xcframework/ios-arm64/libcore-device.a
    ```
    ![step7](screenshot/ios/5.png)
+
+### For Android
+
+1. Build so file from `core` or else
+2. Move so file to `android/app/src/main/jniLibs/arm64-v8a` (create folder manually)
