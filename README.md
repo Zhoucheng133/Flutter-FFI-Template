@@ -1,6 +1,19 @@
 # Flutter FFI Dynamic Library Template
 
-## Steps
+## Content
+- [Usage in Dart](#usage-in-dart)
+- [Configuration](#configuration)
+  - [Windows](#for-windows)
+  - [macOS](#for-macos)
+  - [iOS](#for-ios)
+
+
+## Usage in Dart
+
+1. Add package `ffi` to your project
+2. You can see the detialed usage in `lib/components/adder` and `lib/components/concater`
+
+## Configuration
 
 ### For Windows
 1. Build dll from `core` or else
